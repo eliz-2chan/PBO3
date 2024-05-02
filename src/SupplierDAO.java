@@ -110,5 +110,5 @@ public class SupplierDAO {
             System.err.println("Error: " + e.getMessage());
         }
     }
-    //Changing My Credential RN
+    //Changing My Credential
 }
