@@ -65,6 +65,12 @@
               <text value="Reset"/>
             </properties>
           </component>
+          <component id="96771" class="javax.swing.JButton" binding="deleteButton">
+            <constraints/>
+            <properties>
+              <text value="Delete"/>
+            </properties>
+          </component>
         </children>
       </grid>
       <grid id="c62d5" layout-manager="BorderLayout" hgap="0" vgap="0">

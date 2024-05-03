@@ -1,5 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.*;
@@ -11,9 +12,11 @@ public class FormSupplier extends JFrame{
     private JTable viewTable;
     private JButton addButton;
     private JButton resetButton;
+    private JButton deleteButton;
 
     public FormSupplier(){
         searchSupplier();
+        deleteSupplier();
         resetButton.addActionListener(e -> {
             searchTextField.setText("");
             initTable();
@@ -87,6 +90,41 @@ public class FormSupplier extends JFrame{
         });
 
     }
+    public void deleteSupplier()
+    {
+        deleteButton.addActionListener(e->{
+            int chosenRow = viewTable.getSelectedRow();
+//            JOptionPane.showMessageDialog(null,String.valueOf(chosenRow));
+            if(chosenRow<0){
+                JOptionPane.showMessageDialog(null,
+                        "Mohon pilih salah satu Data!","Warning!",JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            int choice = JOptionPane.showConfirmDialog(null,
+                    "Hapus Data?",
+                    "Warning!",
+                    JOptionPane.YES_NO_OPTION);
+            if (choice == 0 ){
+                TableModel tm = viewTable.getModel();
+                int id  = Integer.parseInt(tm.getValueAt(chosenRow,0).toString());
+
+                try
+                {
+                    Connection conn = DatabaseConnection.getConnection();
+
+                    String DELETE_QUERY = "DELETE FROM r_supplier WHERE id=?";
+
+                    PreparedStatement statement = conn.prepareStatement(DELETE_QUERY);
+
+                    statement.setInt(1, id);
+                    statement.executeUpdate();
+                } catch (SQLException err) {
+//                    e.printStackTrace();
+                    throw new RuntimeException(err);
+                }
+            }
+        });
+    }
     public void initTable(){
         try{
             Connection conn = DatabaseConnection.getConnection();
@@ -105,7 +143,7 @@ public class FormSupplier extends JFrame{
             viewTable.getColumnModel().getColumn(11).setMaxWidth(64);
             viewTable.getColumnModel().getColumn(12).setMaxWidth(64);
             viewTable.getColumnModel().getColumn(13).setMaxWidth(64);
-
+            viewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
             Object[] row = new Object[14];
             while(rs.next()){
