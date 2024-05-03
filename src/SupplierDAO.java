@@ -201,7 +201,7 @@ public class SupplierDAO {
     public static void main(String[] args) {
         // Contoh penggunaan
         Supplier supplier1 = new Supplier(
-                "John Doe",
+                "Fyodor Dostoevsky",
                 "Jl. Contoh No. 123",
                 "12345",
                 "08123456",
@@ -215,25 +215,25 @@ public class SupplierDAO {
                 2.0,
                 4.0
         );
-        Supplier supplier2 = new Supplier(
-                "Anna Doe",
-                "Jl. Contoh No. 123",
-                "12345",
-                "08123456",
-                "Semarang",
-                "024123",
-                "john@gmail.com",
-                1,
-                0.5,
-                2.0,
-                3.0,
-                2.0,
-                4.0
-        );
+//        Supplier supplier2 = new Supplier(
+//                "Anna Doe",
+//                "Jl. Contoh No. 123",
+//                "12345",
+//                "08123456",
+//                "Semarang",
+//                "024123",
+//                "john@gmail.com",
+//                1,
+//                0.5,
+//                2.0,
+//                3.0,
+//                2.0,
+//                4.0
+//        );
         try {
             System.out.println("Hello World!");
-            SupplierDAO.tampilkanSupplier();
-//            SupplierDAO.tambahSupplier(supplier1);
+//            SupplierDAO.tampilkanSupplier();
+            SupplierDAO.tambahSupplier(supplier1);
 //            SupplierDAO.tambahSupplier(supplier2);
 //            System.out.println("Data Supplier yang tersimpan di database:");
 //            SupplierDAO.tampilkanSupplier();
