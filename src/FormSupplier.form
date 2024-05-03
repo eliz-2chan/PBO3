@@ -59,6 +59,12 @@
               <text value="Add"/>
             </properties>
           </component>
+          <component id="36388" class="javax.swing.JButton" binding="updateButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="Update"/>
+            </properties>
+          </component>
           <component id="2ebe6" class="javax.swing.JButton" binding="resetButton" default-binding="true">
             <constraints/>
             <properties>

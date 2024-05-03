@@ -24,9 +24,7 @@
     <last-used-providers />
   </component>
   <component name="DBNavigator.Project.DatabaseFileManager">
-    <open-files>
-      <object connection-id="4e033755-2295-4beb-a4df-32f72f16a5e2" object-ref="schemas/dataku/tables/r_supplier" />
-    </open-files>
+    <open-files />
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="4e033755-2295-4beb-a4df-32f72f16a5e2" />

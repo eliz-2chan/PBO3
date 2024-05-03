@@ -13,10 +13,13 @@ public class FormSupplier extends JFrame{
     private JButton addButton;
     private JButton resetButton;
     private JButton deleteButton;
+    private JButton updateButton;
 
     public FormSupplier(){
         searchSupplier();
         deleteSupplier();
+        updateSupplier();
+        addSupplier();
         resetButton.addActionListener(e -> {
             searchTextField.setText("");
             initTable();
@@ -38,7 +41,12 @@ public class FormSupplier extends JFrame{
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
     }
-
+    public void addSupplier(){
+        addButton.addActionListener(e -> {
+            AddSupplierForm inputFrame = new AddSupplierForm();
+            inputFrame.setVisible(true);
+        });
+    }
     public void searchSupplier()
     {
         searchButton.addActionListener(e -> {
@@ -62,7 +70,6 @@ public class FormSupplier extends JFrame{
 
                 DefaultTableModel dtm = (DefaultTableModel) viewTable.getModel();
                 dtm.setRowCount(0);
-
 
 
                 Object[] row = new Object[14];
@@ -125,10 +132,27 @@ public class FormSupplier extends JFrame{
             }
         });
     }
+    public void updateSupplier(){
+        updateButton.addActionListener(e -> {
+            int chosenRow = viewTable.getSelectedRow();
+            if(chosenRow<0){
+                JOptionPane.showMessageDialog(null,
+                        "Mohon pilih salah satu Data untuk Update!","Warning!",JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            TableModel tm = viewTable.getModel();
+            int id  = Integer.parseInt(tm.getValueAt(chosenRow,0).toString());
+
+            UpdateSupplierForm updateFrame = new UpdateSupplierForm();
+            updateFrame.setId(id);
+            updateFrame.fillUpdateForm();
+            updateFrame.setVisible(true);
+        });
+    }
     public void initTable(){
         try{
             Connection conn = DatabaseConnection.getConnection();
-            String select_all_query = "SELECT * FROM r_supplier";
+            String select_all_query = "SELECT * FROM r_supplier ORDER BY id";
             Statement s = conn.createStatement();
             ResultSet rs = s.executeQuery(select_all_query);
 
