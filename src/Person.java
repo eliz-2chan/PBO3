@@ -14,12 +14,14 @@ public class Person {
     public void setNama(String nama) {
         this.nama = nama;
     }
+
     public String getAlamat() {
         return alamat;
     }
     public void setAlamat(String alamat) {
         this.alamat = alamat;
     }
+
     // Method toString untuk representasi String dari objek
     @Override
     public String toString() {

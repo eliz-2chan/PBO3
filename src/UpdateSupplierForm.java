@@ -15,6 +15,12 @@ public class UpdateSupplierForm extends JFrame{
     private JTextField faxField;
     private JTextField emailField;
     private JButton updateButton;
+    private JTextField jtField;
+    private JTextField awalField;
+    private JTextField hutangField;
+    private JTextField discField;
+    private JTextField bayarField;
+    private JTextField akhirField;
     private int id;
     public void setId(int id){
         this.id = id;
@@ -36,36 +42,47 @@ public class UpdateSupplierForm extends JFrame{
     public void updateSupplier(){
         updateButton.addActionListener(e->{
             String nama = namaField.getText();
+            if(nama.isEmpty()){
+                JOptionPane.showMessageDialog(null,
+                        "Mohon Isi Nama!","Warning!",JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             String alamat = alamatField.getText();
             String cp = cpField.getText();
             String telp = teleponField.getText();
             String kota = kotaField.getText();
             String fax = faxField.getText();
             String email = emailField.getText();
-            if(nama.isEmpty()){
+            Integer jt = Integer.parseInt(jtField.getText());
+            Double disc = Double.parseDouble(discField.getText());
+            Double awal = Double.parseDouble(awalField.getText());
+            Double hutang = Double.parseDouble(hutangField.getText());
+            Double bayar = Double.parseDouble(bayarField.getText());
+            Double akhir = Double.parseDouble(akhirField.getText());
+
+            Supplier supplier = new Supplier(
+                    nama,
+                    alamat,
+                    cp,
+                    telp,
+                    kota,
+                    fax,
+                    email,
+                    jt,
+                    disc,
+                    awal,
+                    hutang,
+                    bayar,
+                    akhir
+            );
+            Boolean result = supplier.updSupplier(this.id);
+            if (result) {
                 JOptionPane.showMessageDialog(null,
-                        "Mohon Isi Nama!","Warning!",JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            try{
-                Connection conn = DatabaseConnection.getConnection();
-
-                String UPDATE_QUERY = "UPDATE r_supplier SET nama=?, alamat=?, cp=?, telp=?, kota=?, fax=?, email=? WHERE id = ?";
-
-                PreparedStatement statement = conn.prepareStatement(UPDATE_QUERY);
-
-                statement.setString(1, nama);
-                statement.setString(2, alamat);
-                statement.setString(3, cp);
-                statement.setString(4, telp);
-                statement.setString(5, kota);
-                statement.setString(6, fax);
-                statement.setString(7, email);
-                statement.setInt(8, id);
-                statement.execute();
+                        "Edit Berhasil!","Sukses!",JOptionPane.INFORMATION_MESSAGE);
                 dispose();
-            }catch (SQLException err){
-                throw new RuntimeException();
+            }else {
+                JOptionPane.showMessageDialog(null,
+                        "Error!", "Warning!", JOptionPane.WARNING_MESSAGE);
             }
         });
     }
@@ -86,6 +103,13 @@ public class UpdateSupplierForm extends JFrame{
                 kotaField.setText(rs.getString("kota"));
                 faxField.setText(rs.getString("fax"));
                 emailField.setText(rs.getString("email"));
+
+                jtField.setText(rs.getString("jt"));
+                discField.setText(rs.getString("disc"));
+                awalField.setText(rs.getString("awal"));
+                hutangField.setText(rs.getString("hutang"));
+                bayarField.setText(rs.getString("bayar"));
+                akhirField.setText(rs.getString("akhir"));
             }
         }catch (SQLException err){
             throw new RuntimeException();

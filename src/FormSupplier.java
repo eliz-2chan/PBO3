@@ -107,27 +107,23 @@ public class FormSupplier extends JFrame{
                         "Mohon pilih salah satu Data!","Warning!",JOptionPane.WARNING_MESSAGE);
                 return;
             }
+
+            TableModel tm = viewTable.getModel();
+            String nama = tm.getValueAt(chosenRow,1).toString();
             int choice = JOptionPane.showConfirmDialog(null,
-                    "Hapus Data?",
+                    "Hapus Data dengan nama  " + nama + "?",
                     "Warning!",
                     JOptionPane.YES_NO_OPTION);
+
             if (choice == 0 ){
-                TableModel tm = viewTable.getModel();
-                int id  = Integer.parseInt(tm.getValueAt(chosenRow,0).toString());
-
-                try
-                {
-                    Connection conn = DatabaseConnection.getConnection();
-
-                    String DELETE_QUERY = "DELETE FROM r_supplier WHERE id=?";
-
-                    PreparedStatement statement = conn.prepareStatement(DELETE_QUERY);
-
-                    statement.setInt(1, id);
-                    statement.executeUpdate();
-                } catch (SQLException err) {
-//                    e.printStackTrace();
-                    throw new RuntimeException(err);
+                Global.id  = Integer.parseInt(tm.getValueAt(chosenRow,0).toString());
+                Boolean result = Supplier.delSupplier(Global.id);
+                if (result) {
+                    JOptionPane.showMessageDialog(null,
+                            "Delete Berhasil!","Sukses!",JOptionPane.INFORMATION_MESSAGE);
+                }else{
+                    JOptionPane.showMessageDialog(null,
+                            "Error!","Warning!",JOptionPane.WARNING_MESSAGE);
                 }
             }
         });
@@ -141,21 +137,17 @@ public class FormSupplier extends JFrame{
                 return;
             }
             TableModel tm = viewTable.getModel();
-            int id  = Integer.parseInt(tm.getValueAt(chosenRow,0).toString());
+            Global.id  = Integer.parseInt(tm.getValueAt(chosenRow,0).toString());
 
             UpdateSupplierForm updateFrame = new UpdateSupplierForm();
-            updateFrame.setId(id);
+            updateFrame.setId(Global.id);
             updateFrame.fillUpdateForm();
             updateFrame.setVisible(true);
         });
     }
     public void initTable(){
         try{
-            Connection conn = DatabaseConnection.getConnection();
             String select_all_query = "SELECT * FROM r_supplier ORDER BY id";
-            Statement s = conn.createStatement();
-            ResultSet rs = s.executeQuery(select_all_query);
-
             String [] header = {"Id","Nama","Alamat","CP","Telepon","Kota","Fax","Email","Jt","Disc","Awal","Hutang","Bayar","Akhir"};
             DefaultTableModel dtm = new DefaultTableModel(header,0);
             viewTable.setModel(dtm);
@@ -168,25 +160,7 @@ public class FormSupplier extends JFrame{
             viewTable.getColumnModel().getColumn(12).setMaxWidth(64);
             viewTable.getColumnModel().getColumn(13).setMaxWidth(64);
             viewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
-            Object[] row = new Object[14];
-            while(rs.next()){
-                row[0] = rs.getInt("id");
-                row[1] = rs.getString("nama");
-                row[2] = rs.getString("alamat");
-                row[3] = rs.getString("cp");
-                row[4] = rs.getString("telp");
-                row[5] = rs.getString("kota");
-                row[6] = rs.getString("fax");
-                row[7] = rs.getString("email");
-                row[8] = rs.getString("jt");
-                row[9] = rs.getString("disc");
-                row[10] = rs.getString("awal");
-                row[11] = rs.getString("hutang");
-                row[12] = rs.getString("bayar");
-                row[13] = rs.getString("akhir");
-                dtm.addRow(row);
-            }
+            Supplier.baca_data(dtm, select_all_query);
 
         }catch(Exception e){
             e.printStackTrace();

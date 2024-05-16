@@ -14,6 +14,12 @@ public class AddSupplierForm extends JFrame {
     private JTextField kotaField;
     private JTextField faxField;
     private JTextField emailField;
+    private JTextField discField;
+    private JTextField awalField;
+    private JTextField hutangField;
+    private JTextField bayarField;
+    private JTextField jtField;
+    private JTextField akhirField;
 
     public AddSupplierForm(){
         createSupplier();
@@ -32,35 +38,47 @@ public class AddSupplierForm extends JFrame {
     public void createSupplier(){
         addButton.addActionListener(e->{
             String nama = namaField.getText();
+            if(nama.isEmpty()){
+                JOptionPane.showMessageDialog(null,
+                        "Mohon Isi Nama!","Warning!",JOptionPane.WARNING_MESSAGE);
+                return;
+            }
             String alamat = alamatField.getText();
             String cp = cpField.getText();
             String telp = teleponField.getText();
             String kota = kotaField.getText();
             String fax = faxField.getText();
             String email = emailField.getText();
-            if(nama.isEmpty()){
+            Integer jt = Integer.parseInt(jtField.getText());
+            Double disc = Double.parseDouble(discField.getText());
+            Double awal = Double.parseDouble(awalField.getText());
+            Double hutang = Double.parseDouble(hutangField.getText());
+            Double bayar = Double.parseDouble(bayarField.getText());
+            Double akhir = Double.parseDouble(akhirField.getText());
+
+            Supplier supplier = new Supplier(
+                    nama,
+                    alamat,
+                    cp,
+                    telp,
+                    kota,
+                    fax,
+                    email,
+                    jt,
+                    disc,
+                    awal,
+                    hutang,
+                    bayar,
+                    akhir
+            );
+            Boolean result = supplier.addSuplier();
+            if (result) {
                 JOptionPane.showMessageDialog(null,
-                        "Mohon Isi Nama!","Warning!",JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            try{
-                Connection conn = DatabaseConnection.getConnection();
-
-                String INSERT_QUERY = "INSERT INTO r_supplier (nama,alamat,cp,telp,kota,fax,email) VALUES (?, ?, ?, ?, ?, ?, ?) ";
-
-                PreparedStatement statement = conn.prepareStatement(INSERT_QUERY);
-
-                statement.setString(1, nama);
-                statement.setString(2, alamat);
-                statement.setString(3, cp);
-                statement.setString(4, telp);
-                statement.setString(5, kota);
-                statement.setString(6, fax);
-                statement.setString(7, email);
-                statement.executeUpdate();
+                        "Add Berhasil!","Sukses!",JOptionPane.INFORMATION_MESSAGE);
                 dispose();
-            }catch (SQLException err){
-                throw new RuntimeException();
+            }else{
+                JOptionPane.showMessageDialog(null,
+                        "Error!","Warning!",JOptionPane.WARNING_MESSAGE);
             }
         });
     }
