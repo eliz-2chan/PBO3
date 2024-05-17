@@ -4,8 +4,16 @@ import javax.swing.table.TableModel;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.sql.*;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Comparator;
+import javax.swing.table.TableRowSorter;
 
 public class FormSupplier extends JFrame{
+//    Main Panel
     private JPanel mainPanel;
     private JTextField searchTextField;
     private JButton searchButton;
@@ -15,6 +23,23 @@ public class FormSupplier extends JFrame{
     private JButton deleteButton;
     private JButton updateButton;
 
+//    Popup Menu
+    private JPopupMenu popupMenu;
+    private JMenuItem editMenuItem;
+    private JMenuItem deleteMenuItem;
+
+// Filter and Pagination
+    private JComboBox filter;
+    private JButton backButton;
+    private JTextField paginationField;
+    private JButton nextButton;
+    private String filterCriteria = "Terbaru";
+    private int currentPage = 1;
+    private int totalRows;
+    private int totalPages;
+    private TableRowSorter<DefaultTableModel> sorter;
+    private List<DatabaseManager> allData;
+
     public FormSupplier(){
         searchSupplier();
         deleteSupplier();
@@ -22,15 +47,17 @@ public class FormSupplier extends JFrame{
         addSupplier();
         resetButton.addActionListener(e -> {
             searchTextField.setText("");
+            currentPage = 1;
             initTable();
         });
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowActivated(WindowEvent e) {
-//                super.windowActivated(e);
+                super.windowActivated(e);
                 initTable();
             }
         });
+
         initTable();
         init();
     }
@@ -40,6 +67,7 @@ public class FormSupplier extends JFrame{
         pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
+        initComponents();
     }
     public void addSupplier(){
         addButton.addActionListener(e -> {
@@ -47,83 +75,40 @@ public class FormSupplier extends JFrame{
             inputFrame.setVisible(true);
         });
     }
+
     public void searchSupplier()
     {
         searchButton.addActionListener(e -> {
-            try{
-                Connection conn = DatabaseConnection.getConnection();
-
-                String keyword  = searchTextField.getText();
-                if(keyword.equals("")){
-                    JOptionPane.showMessageDialog(null,
-                            "Mohon Isi Kata Kunci Untuk Pencarian!","Warning!",JOptionPane.WARNING_MESSAGE);
-                    searchTextField.requestFocus();
-                    return;
-                }
-
-                keyword  = "%" +  searchTextField.getText() + "%";
-                String searchSupplierQuery = "SELECT * FROM r_supplier WHERE nama LIKE ?";
-
-                PreparedStatement statement = conn.prepareStatement(searchSupplierQuery);
-                statement.setString(1,keyword);
-                ResultSet rs = statement.executeQuery();
-
-                DefaultTableModel dtm = (DefaultTableModel) viewTable.getModel();
-                dtm.setRowCount(0);
-
-
-                Object[] row = new Object[14];
-                while(rs.next()){
-                    row[0] = rs.getInt("id");
-                    row[1] = rs.getString("nama");
-                    row[2] = rs.getString("alamat");
-                    row[3] = rs.getString("cp");
-                    row[4] = rs.getString("telp");
-                    row[5] = rs.getString("kota");
-                    row[6] = rs.getString("fax");
-                    row[7] = rs.getString("email");
-                    row[8] = rs.getString("jt");
-                    row[9] = rs.getString("disc");
-                    row[10] = rs.getString("awal");
-                    row[11] = rs.getString("hutang");
-                    row[12] = rs.getString("bayar");
-                    row[13] = rs.getString("akhir");
-                    dtm.addRow(row);
-                }
-
-            }catch(Exception err){
-                err.printStackTrace();
-            };
+            currentPage = 1;
+            initTable();
         });
-
     }
+
     public void deleteSupplier()
     {
         deleteButton.addActionListener(e->{
-            int chosenRow = viewTable.getSelectedRow();
-//            JOptionPane.showMessageDialog(null,String.valueOf(chosenRow));
-            if(chosenRow<0){
-                JOptionPane.showMessageDialog(null,
-                        "Mohon pilih salah satu Data!","Warning!",JOptionPane.WARNING_MESSAGE);
+            int selectedRow = viewTable.getSelectedRow();
+            if (selectedRow < 0) {
+                JOptionPane.showMessageDialog(this, "Mohon pilih salah satu Data untuk Hapus!", "Warning!", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            TableModel tm = viewTable.getModel();
-            String nama = tm.getValueAt(chosenRow,1).toString();
-            int choice = JOptionPane.showConfirmDialog(null,
-                    "Hapus Data dengan nama  " + nama + "?",
-                    "Warning!",
-                    JOptionPane.YES_NO_OPTION);
-
-            if (choice == 0 ){
-                Global.id  = Integer.parseInt(tm.getValueAt(chosenRow,0).toString());
-                Boolean result = Supplier.delSupplier(Global.id);
-                if (result) {
-                    JOptionPane.showMessageDialog(null,
-                            "Delete Berhasil!","Sukses!",JOptionPane.INFORMATION_MESSAGE);
-                }else{
-                    JOptionPane.showMessageDialog(null,
-                            "Error!","Warning!",JOptionPane.WARNING_MESSAGE);
+            int option = JOptionPane.showConfirmDialog(FormSupplier.this, "Apakah Anda yakin ingin menghapus item ini?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+            if (option == JOptionPane.YES_OPTION) {
+                DefaultTableModel model = (DefaultTableModel) viewTable.getModel();
+                int modelRow = viewTable.convertRowIndexToModel(selectedRow);
+                String id = model.getValueAt(modelRow, 0).toString();
+                try {
+                    boolean deleted = DatabaseManager.Del(id);
+                    if (deleted) {
+                        model.removeRow(modelRow);
+                        JOptionPane.showMessageDialog(this, "Item berhasil dihapus.");
+                        initTable();
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Gagal menghapus item.", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } catch (SQLException ex) {
+                    JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat menghapus item: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
@@ -136,34 +121,207 @@ public class FormSupplier extends JFrame{
                         "Mohon pilih salah satu Data untuk Update!","Warning!",JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            TableModel tm = viewTable.getModel();
-            Global.id  = Integer.parseInt(tm.getValueAt(chosenRow,0).toString());
 
-            UpdateSupplierForm updateFrame = new UpdateSupplierForm();
+            int modelRow = viewTable.convertRowIndexToModel(chosenRow);
+
+            TableModel tm = viewTable.getModel();
+            Global.id = tm.getValueAt(modelRow, 0).toString();
+            String nama = tm.getValueAt(modelRow, 1).toString();
+            String alamat = tm.getValueAt(modelRow, 2).toString();
+            String telp = tm.getValueAt(modelRow, 3).toString();
+
+            UpdateSupplierForm updateFrame = new UpdateSupplierForm(nama,alamat,telp);
             updateFrame.setId(Global.id);
-            updateFrame.fillUpdateForm();
             updateFrame.setVisible(true);
         });
     }
-    public void initTable(){
-        try{
-            String select_all_query = "SELECT * FROM r_supplier ORDER BY id";
-            String [] header = {"Id","Nama","Alamat","CP","Telepon","Kota","Fax","Email","Jt","Disc","Awal","Hutang","Bayar","Akhir"};
-            DefaultTableModel dtm = new DefaultTableModel(header,0);
-            viewTable.setModel(dtm);
+//
+    public void initComponents(){
+        createPopupMenu();
+        viewTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TableMouseClicked(evt);
+            }
+        });
+        filter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FilterActionPerformed(evt);
+            }
+        });
 
-            viewTable.getColumnModel().getColumn(0).setMaxWidth(32);
-            viewTable.getColumnModel().getColumn(8).setMaxWidth(32);
-            viewTable.getColumnModel().getColumn(9).setMaxWidth(64);
-            viewTable.getColumnModel().getColumn(10).setMaxWidth(64);
-            viewTable.getColumnModel().getColumn(11).setMaxWidth(64);
-            viewTable.getColumnModel().getColumn(12).setMaxWidth(64);
-            viewTable.getColumnModel().getColumn(13).setMaxWidth(64);
-            viewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            Supplier.baca_data(dtm, select_all_query);
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextActionPerformed(evt);
+            }
+        });
 
-        }catch(Exception e){
-            e.printStackTrace();
-        };
+        backButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                backActionPerformed(evt);
+            }
+        });
+
+
     }
+
+    public void initTable(){
+        try {
+            String[] header = {"Id", "Nama", "Alamat", "Telp"};
+            DefaultTableModel dtm = new DefaultTableModel(header, 0) {
+                public boolean isCellEditable(int row, int column) {
+                    return false; // All cells non-editable
+                }
+            };
+            viewTable.setModel(dtm);
+            viewTable.getColumnModel().getColumn(0).setMaxWidth(64);
+            viewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+            Connection conn = DatabaseConnection.getConnection();
+            String keyword = searchTextField.getText().trim();
+            String searchQuery = "SELECT * FROM r_supplier";
+            if (!keyword.isEmpty()) {
+                keyword = "%" + keyword + "%";
+                searchQuery += " WHERE nama LIKE ?";
+            }
+
+            PreparedStatement statement = conn.prepareStatement(searchQuery);
+            if (!keyword.isEmpty()) {
+                statement.setString(1, keyword);
+            }
+            ResultSet rs = statement.executeQuery();
+
+            List<DatabaseManager> data = new ArrayList<>();
+            while (rs.next()) {
+                DatabaseManager record = new DatabaseManager();
+                record.setId(rs.getString("id"));
+                record.setNama(rs.getString("nama"));
+                record.setAlamat(rs.getString("alamat"));
+                record.setTelp(rs.getString("telp"));
+                data.add(record);
+            }
+
+            switch (filterCriteria) {
+                case "Terbaru" -> {}
+                case "Terlama" -> Collections.reverse(data);
+                case "A-Z" -> Collections.sort(data, Comparator.comparing(DatabaseManager::getNama));
+                default -> {}
+            }
+
+            allData = data;
+            totalRows = data.size();
+            int visibleRows = (viewTable.getHeight() - 20) / 20;
+            int pageSize = Math.max(20, visibleRows);
+
+            totalPages = (int) Math.ceil((double) totalRows / pageSize);
+
+            int start = (currentPage - 1) * pageSize;
+            int end = Math.min(start + pageSize, totalRows);
+
+            for (int i = start; i < end; i++) {
+                DatabaseManager record = data.get(i);
+                Object[] row = {
+                        String.valueOf(record.getId()),
+                        record.getNama(),
+                        record.getAlamat(),
+                        record.getTelp()
+                };
+                dtm.addRow(row);
+            }
+            paginationField.setText(String.valueOf(currentPage));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void FilterActionPerformed(java.awt.event.ActionEvent evt) {
+        filterCriteria = (String) filter.getSelectedItem();
+        initTable();
+    }
+
+    private void TableMouseClicked(java.awt.event.MouseEvent evt) {
+        int row = viewTable.rowAtPoint(evt.getPoint());
+        if (evt.getButton() == MouseEvent.BUTTON3 && row != -1) {
+            viewTable.setRowSelectionInterval(row, row);
+            popupMenu.show(viewTable, evt.getX(), evt.getY());
+        }
+    }
+
+    private void backActionPerformed(java.awt.event.ActionEvent evt) {
+        if (currentPage > 1) {
+            currentPage--;
+            initTable();
+        }
+    }
+
+    private void nextActionPerformed(java.awt.event.ActionEvent evt) {
+        if (currentPage < totalPages) {
+            currentPage++;
+            initTable();
+        }
+    }
+
+    public void createPopupMenu() {
+        popupMenu = new JPopupMenu();
+        editMenuItem = new JMenuItem("Edit");
+        deleteMenuItem = new JMenuItem("Delete");
+
+        editMenuItem.addActionListener(e -> {
+            int selectedRow = viewTable.getSelectedRow();
+            if (selectedRow != -1) {
+                int chosenRow = viewTable.getSelectedRow();
+                if(chosenRow<0){
+                    JOptionPane.showMessageDialog(null,
+                            "Mohon pilih salah satu Data untuk Update!","Warning!",JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                int modelRow = viewTable.convertRowIndexToModel(chosenRow);
+
+                TableModel tm = viewTable.getModel();
+                Global.id = tm.getValueAt(modelRow, 0).toString();
+                String nama = tm.getValueAt(modelRow, 1).toString();
+                String alamat = tm.getValueAt(modelRow, 2).toString();
+                String telp = tm.getValueAt(modelRow, 3).toString();
+
+                UpdateSupplierForm updateFrame = new UpdateSupplierForm(nama,alamat,telp);
+                updateFrame.setId(Global.id);
+                updateFrame.setVisible(true);
+            } else {
+                JOptionPane.showMessageDialog(this, "Pilih baris yang ingin diperbarui terlebih dahulu.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+            }
+        });
+
+        deleteMenuItem.addActionListener(e -> {
+            int selectedRow = viewTable.getSelectedRow();
+            if (selectedRow != -1) {
+                if (selectedRow < 0) {
+                    JOptionPane.showMessageDialog(this, "Mohon pilih salah satu Data untuk Hapus!", "Warning!", JOptionPane.WARNING_MESSAGE);
+                    return;
+                }
+
+                int option = JOptionPane.showConfirmDialog(FormSupplier.this, "Apakah Anda yakin ingin menghapus item ini?", "Konfirmasi Hapus", JOptionPane.YES_NO_OPTION);
+                if (option == JOptionPane.YES_OPTION) {
+                    DefaultTableModel model = (DefaultTableModel) viewTable.getModel();
+                    int modelRow = viewTable.convertRowIndexToModel(selectedRow);
+                    String id = model.getValueAt(modelRow, 0).toString();
+                    try {
+                        boolean deleted = DatabaseManager.Del(id);
+                        if (deleted) {
+                            model.removeRow(modelRow);
+                            JOptionPane.showMessageDialog(this, "Item berhasil dihapus.");
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Gagal menghapus item.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (SQLException ex) {
+                        JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat menghapus item: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            }
+        });
+
+        popupMenu.add(editMenuItem);
+        popupMenu.add(deleteMenuItem);
+    }
+
 }

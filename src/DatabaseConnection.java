@@ -3,11 +3,22 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private static final String URL = "jdbc:mysql://localhost:3306/dataku";
-    private static final String USERNAME = "root";
-    private static final String PASSWORD = "";
+    private static Connection connection;
+    public static Connection getConnection() {
+        try {
+            DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
+            String url = "jdbc:mysql://localhost:3306/dataku"; //nama url database
+            String user = "root"; //nama user database
+            String pass = ""; //nama password database
+            connection = DriverManager.getConnection(url, user, pass);
+            System.out.println("Berhasil Koneksi");
+        } catch (Exception e) {
+            System.err.println("connection gagal " + e.getMessage());
+        }
+        return connection;
+    }
 
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
+    public static void main(String[] args) {
+        connection = getConnection();
     }
 }

@@ -1,3 +1,3 @@
 public class Global {
-    public static Integer id;
+    public static String id;
 }
