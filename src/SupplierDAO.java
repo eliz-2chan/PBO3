@@ -2,18 +2,34 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+import java.time.LocalDate;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class SupplierDAO {
     static InputStreamReader inputStreamReader = new InputStreamReader(System.in);
     static BufferedReader input = new BufferedReader(inputStreamReader);
+
     private static final String INSERT_QUERY = "INSERT INTO r_supplier (nama,alamat,cp,telp,kota,fax,email,jt,disc,awal,hutang,bayar,akhir) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_QUERY = "UPDATE r_supplier SET nama=?, alamat=?, cp=?, telp=?, kota=?, fax=?, email=?, jt=?, disc=?, awal=?, hutang=?, bayar=?, akhir=? WHERE id=?";
-    private static final String SELECT_ALL_QUERY = "SELECT * FROM r_supplier";
+    private static final String SELECT_ALL_QUERY = "SELECT * FROM r_supplier ORDER BY id ASC";
     private static final String SELECT_ONE = "SELECT * FROM r_supplier WHERE id=?";
     private static final String DELETE_QUERY = "DELETE FROM r_supplier WHERE id=?";
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    public static String formatTanggal(java.sql.Date tgl)
+    {
+        String formattedTgl;
+        if (tgl != null) {
+            LocalDate localDate = tgl.toLocalDate();
+            return formattedTgl = localDate.format(FORMATTER);
+        } else {
+            return formattedTgl = "No Date";// Handle or log null date appropriately
+        }
+    }
+
     public static void tambahSupplier(Supplier supplier) throws SQLException
     {
         Connection conn = DatabaseConnection.getConnection();
@@ -32,6 +48,7 @@ public class SupplierDAO {
             statement.setDouble(11, supplier.getHutang());
             statement.setDouble(12, supplier.getBayar());
             statement.setDouble(13, supplier.getAkhir());
+//            statement.setString(14, supplier.getTgl());
             statement.executeUpdate();
         }
     }
@@ -54,6 +71,8 @@ public class SupplierDAO {
                 Double hutang = resultSet.getDouble("hutang");
                 Double bayar = resultSet.getDouble("bayar");
                 Double akhir = resultSet.getDouble("akhir");
+                String formattedTgl = formatTanggal(resultSet.getDate("tgl"));
+
                 System.out.println("Data Supplier yang tersimpan di database:");
                 System.out.println(
                     "id :" + id +
@@ -69,7 +88,8 @@ public class SupplierDAO {
                     ",awal: " + awal +
                     ",hutang: " + hutang +
                     ",bayar: " + bayar +
-                    ",akhir: " + akhir
+                    ",akhir: " + akhir +
+                    ",tgl : " + formattedTgl
                 );
             }
         }
@@ -94,6 +114,7 @@ public class SupplierDAO {
                 Double hutang = resultSet.getDouble("hutang");
                 Double bayar = resultSet.getDouble("bayar");
                 Double akhir = resultSet.getDouble("akhir");
+                String formattedTgl = formatTanggal(resultSet.getDate("tgl"));
                 System.out.println("Data Supplier yang dengan id " + id_query + ":");
                 System.out.println(
                         "id :" + id +
@@ -109,7 +130,8 @@ public class SupplierDAO {
                                 ",awal: " + awal +
                                 ",hutang: " + hutang +
                                 ",bayar: " + bayar +
-                                ",akhir: " + akhir
+                                ",akhir: " + akhir +
+                                ",tanggal : " + formattedTgl
                 );
             }
         }
@@ -161,6 +183,9 @@ public class SupplierDAO {
             System.out.print("akhir: ");
             Double akhir = Double.parseDouble(input.readLine().trim());
 
+            System.out.print("tanggal (format yyyy-MM-dd) : ");
+            String tgl = input.readLine().trim();
+
 
             statement.setString(1, nama);
             statement.setString(2, alamat);
@@ -175,7 +200,8 @@ public class SupplierDAO {
             statement.setDouble(11, hutang);
             statement.setDouble(12, bayar);
             statement.setDouble(13, akhir);
-            statement.setInt(14, id);
+            statement.setString(14, tgl);
+            statement.setInt(15, id);
             statement.execute();
             System.out.println("Data Supplier dengan id : " + id + " berhasil di update!");
             SupplierDAO.tampilkanSatuSupplier(id);
@@ -207,13 +233,14 @@ public class SupplierDAO {
                 "08123456",
                 "Semarang",
                 "024123",
-                "john@gmail.com",
+                "fyodor@gmail.com",
                 1,
                 0.5,
                 2.0,
                 3.0,
                 2.0,
                 4.0
+//                LocalDate.of(2024,5,7)
         );
 //        Supplier supplier2 = new Supplier(
 //                "Anna Doe",
@@ -231,9 +258,9 @@ public class SupplierDAO {
 //                4.0
 //        );
         try {
-            System.out.println("Hello World!");
-//            SupplierDAO.tampilkanSupplier();
+//            System.out.println("Hello World!");
             SupplierDAO.tambahSupplier(supplier1);
+            SupplierDAO.tampilkanSupplier();
 //            SupplierDAO.tambahSupplier(supplier2);
 //            System.out.println("Data Supplier yang tersimpan di database:");
 //            SupplierDAO.tampilkanSupplier();

@@ -10,85 +10,61 @@ public class UpdateSupplierForm extends JFrame{
     private JTextField alamatField;
     private JTextField teleponField;
     private JButton cancelButton;
-    private JTextField cpField;
-    private JTextField kotaField;
-    private JTextField faxField;
-    private JTextField emailField;
     private JButton updateButton;
-    private int id;
-    public void setId(int id){
+    private String id;
+    public void setId(String id){
         this.id = id;
     }
-    public UpdateSupplierForm(){
+
+    public UpdateSupplierForm(String nama, String alamat, String telp)
+    {
+        this.namaField.setText(nama);
+        this.alamatField.setText(alamat);
+        this.teleponField.setText(telp);
+
         updateSupplier();
         cancelButton.addActionListener(e->{
             dispose();
         });
         init();
     }
-    public void init(){
+    public void init()
+    {
         setContentPane(mainPanel);
         setTitle("Update Supplier");
         pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
     }
-    public void updateSupplier(){
-        updateButton.addActionListener(e->{
+
+    public void updateSupplier()
+    {
+        updateButton.addActionListener(e-> {
             String nama = namaField.getText();
-            String alamat = alamatField.getText();
-            String cp = cpField.getText();
             String telp = teleponField.getText();
-            String kota = kotaField.getText();
-            String fax = faxField.getText();
-            String email = emailField.getText();
-            if(nama.isEmpty()){
-                JOptionPane.showMessageDialog(null,
-                        "Mohon Isi Nama!","Warning!",JOptionPane.WARNING_MESSAGE);
+            String alamat = alamatField.getText();
+            String id = this.id;
+
+            if (nama.isEmpty() || telp.isEmpty() || alamat.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Semua data harus diisi.", "Warning!", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            try{
-                Connection conn = DatabaseConnection.getConnection();
 
-                String UPDATE_QUERY = "UPDATE r_supplier SET nama=?, alamat=?, cp=?, telp=?, kota=?, fax=?, email=? WHERE id = ?";
+            if (!telp.matches("\\d+")) {
+                JOptionPane.showMessageDialog(this, "Nomor telepon harus berupa angka.", "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
 
-                PreparedStatement statement = conn.prepareStatement(UPDATE_QUERY);
+            Global.id = id;
 
-                statement.setString(1, nama);
-                statement.setString(2, alamat);
-                statement.setString(3, cp);
-                statement.setString(4, telp);
-                statement.setString(5, kota);
-                statement.setString(6, fax);
-                statement.setString(7, email);
-                statement.setInt(8, id);
-                statement.execute();
+            try {
+                DatabaseManager.Edit(new DatabaseManager(nama, alamat, telp), Global.id);
                 dispose();
-            }catch (SQLException err){
-                throw new RuntimeException();
+                JOptionPane.showMessageDialog(this, "Item berhasil diupdate.");
+            } catch (SQLException evt) {
+                evt.printStackTrace();
             }
         });
     }
-    public void fillUpdateForm(){
-        try{
-            Connection conn = DatabaseConnection.getConnection();
 
-            String SEARCH_BY_ID_QUERY = "SELECT * FROM r_supplier WHERE id=?";
-            PreparedStatement statement = conn.prepareStatement(SEARCH_BY_ID_QUERY);
-
-            statement.setInt(1, id);
-            ResultSet rs = statement.executeQuery();
-            if(rs.next()){
-                namaField.setText(rs.getString("nama"));
-                alamatField.setText(rs.getString("alamat"));
-                cpField.setText(rs.getString("cp"));
-                teleponField.setText(rs.getString("telp"));
-                kotaField.setText(rs.getString("kota"));
-                faxField.setText(rs.getString("fax"));
-                emailField.setText(rs.getString("email"));
-            }
-        }catch (SQLException err){
-            throw new RuntimeException();
-        }
-    }
 }

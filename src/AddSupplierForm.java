@@ -1,6 +1,4 @@
 import javax.swing.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class AddSupplierForm extends JFrame {
@@ -10,10 +8,6 @@ public class AddSupplierForm extends JFrame {
     private JTextField teleponField;
     private JButton cancelButton;
     private JButton addButton;
-    private JTextField cpField;
-    private JTextField kotaField;
-    private JTextField faxField;
-    private JTextField emailField;
 
     public AddSupplierForm(){
         createSupplier();
@@ -24,7 +18,7 @@ public class AddSupplierForm extends JFrame {
     }
     public void init(){
         setContentPane(mainPanel);
-        setTitle("Tambah Supplier");
+        setTitle("Tambah Data Supplier");
         pack();
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -32,36 +26,67 @@ public class AddSupplierForm extends JFrame {
     public void createSupplier(){
         addButton.addActionListener(e->{
             String nama = namaField.getText();
-            String alamat = alamatField.getText();
-            String cp = cpField.getText();
             String telp = teleponField.getText();
-            String kota = kotaField.getText();
-            String fax = faxField.getText();
-            String email = emailField.getText();
-            if(nama.isEmpty()){
-                JOptionPane.showMessageDialog(null,
-                        "Mohon Isi Nama!","Warning!",JOptionPane.WARNING_MESSAGE);
+            String alamat = alamatField.getText();
+
+            if (nama.isEmpty() || telp.isEmpty() || alamat.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Semua data harus diisi.", "Warning!", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-            try{
-                Connection conn = DatabaseConnection.getConnection();
-
-                String INSERT_QUERY = "INSERT INTO r_supplier (nama,alamat,cp,telp,kota,fax,email) VALUES (?, ?, ?, ?, ?, ?, ?) ";
-
-                PreparedStatement statement = conn.prepareStatement(INSERT_QUERY);
-
-                statement.setString(1, nama);
-                statement.setString(2, alamat);
-                statement.setString(3, cp);
-                statement.setString(4, telp);
-                statement.setString(5, kota);
-                statement.setString(6, fax);
-                statement.setString(7, email);
-                statement.executeUpdate();
-                dispose();
-            }catch (SQLException err){
-                throw new RuntimeException();
+            if (!telp.matches("\\d+")) {
+                JOptionPane.showMessageDialog(this, "Nomor telepon harus berupa angka.", "Warning!", JOptionPane.WARNING_MESSAGE);
+                return;
             }
+
+            try {
+                DatabaseManager.Add(new DatabaseManager(nama, alamat, telp));
+                dispose();
+            } catch (SQLException evt) {
+                JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat menambahkan data: " + evt.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+//            String nama = namaField.getText();
+//            if(nama.isEmpty()){
+//                JOptionPane.showMessageDialog(null,
+//                        "Mohon Isi Nama!","Warning!",JOptionPane.WARNING_MESSAGE);
+//                return;
+//            }
+//            String alamat = alamatField.getText();
+//            String cp = cpField.getText();
+//            String telp = teleponField.getText();
+//            String kota = kotaField.getText();
+//            String fax = faxField.getText();
+//            String email = emailField.getText();
+//            Integer jt = Integer.parseInt(jtField.getText());
+//            Double disc = Double.parseDouble(discField.getText());
+//            Double awal = Double.parseDouble(awalField.getText());
+//            Double hutang = Double.parseDouble(hutangField.getText());
+//            Double bayar = Double.parseDouble(bayarField.getText());
+//            Double akhir = Double.parseDouble(akhirField.getText());
+//
+//            Supplier supplier = new Supplier(
+//                    nama,
+//                    alamat,
+//                    cp,
+//                    telp,
+//                    kota,
+//                    fax,
+//                    email,
+//                    jt,
+//                    disc,
+//                    awal,
+//                    hutang,
+//                    bayar,
+//                    akhir
+//            );
+//            Boolean result = supplier.addSuplier();
+//            if (result) {
+//                JOptionPane.showMessageDialog(null,
+//                        "Add Berhasil!","Sukses!",JOptionPane.INFORMATION_MESSAGE);
+//                dispose();
+//            }else{
+//                JOptionPane.showMessageDialog(null,
+//                        "Error!","Warning!",JOptionPane.WARNING_MESSAGE);
+//            }
         });
     }
 }
