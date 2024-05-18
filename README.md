@@ -5,7 +5,6 @@ Software Req :
 <li>Java SDK 17 (Recommended)</li>
 <li>MySQL 8.0.30</li>
 <br>
-<br>
 Required JAR / Dependencies :
 <li>mysql-connector-j-8.3.0</li>
 <li>JWidget-1.0-SNAPSHOT</li>
@@ -25,4 +24,5 @@ Instruction to install the project locally :
 <li>https://github.com/eliz-2chan/PBO3.git</li>
 <li>To Resolve the dependencies go to Files > Project Structure > Modules > Dependencies > Add the required JAR Files</li>
 <li>To Resolve the JDK requirement go to Files > Project Structure > Project > Choose JDK and go to Modules > Dependencies > Choose your installed Java SDK</li>
+<li>Run Main.java</li>
 </ol>
