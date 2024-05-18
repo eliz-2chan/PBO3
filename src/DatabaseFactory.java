@@ -3,33 +3,26 @@ import java.util.Random;
 
 public class DatabaseFactory {
     private static final String[] NAMES = {
-            "Michael", "Christopher", "Jessica", "Matthew", "Ashley", "Jennifer", "Joshua", "Amanda", "Daniel", "David",
-            "James", "Robert", "John", "Joseph", "Andrew", "Ryan", "Brandon", "Jason", "Justin", "Sarah",
-            "William", "Jonathan", "Stephanie", "Brian", "Nicole", "Nicholas", "Anthony", "Heather", "Eric", "Elizabeth",
-            "Adam", "Megan", "Kevin", "Steven", "Thomas", "Timothy", "Christina", "Kyle", "Rachel", "Laura",
-            "Lauren", "Amber", "Brittany", "Danielle", "Emily", "Melissa", "Rebecca", "Kimberly", "Mark", "Jeffrey",
-            "Amy", "Crystal", "Michelle", "Jeremy", "Benjamin", "Samantha", "Aaron", "Kelly", "Jamie", "Patrick",
-            "Sean", "Nathan", "Sara", "Brandi", "Zachary", "Katherine", "Andrea", "Gregory", "Scott", "Erica",
-            "Mary", "Travis", "Lisa", "Kenneth", "Lindsay", "Kristen", "Jose", "Kristin", "Erin", "Jesse",
-            "Paul", "Angela", "Shannon", "Tiffany", "Cody", "Stephen", "Heidi", "Chelsea", "Allison", "Crystal",
-            "Cassandra", "Tara", "Kristina", "Anna", "Vanessa", "Jared", "Courtney", "Bryan", "Katie", "Lindsey",
-            "Jordan", "Alicia", "Peter", "Catherine", "Caitlin", "Hannah", "Julie", "April", "Derek", "Christine"
+            "Budi","Siti","Agus","Dewi","Ayu","Rini","Toni","Maya","Rudi","Dedi","Wati","Rina","Fajar","Eka","Rama","Dian","Tina","Hadi","Asep","Iwan","Yuli","Indra","Ari","Lina","Tari","Bambang","Susi","Joko","Desi","Yanti","Yudi","Yanto","Rizki","Mira","Dimas","Nina","Putri","Dodi","Ratna","Yusuf","Lilis","Bayu","Sari","Vina","Amin","Umi","Anto","Novi","Adis","Alya",
+            "Danu","Zara","Citra","Roni","Nana","Galih","Eris","Miko","Acha","Zaki","Lia","Rani","Euis","Hana","Rosa","Mega","Wawan","Yoga","Anis","Asep","Rendy","Heri","Ujang","Tomi","Feri","Bima","Mia","Intan","Gita","Vira","Ika","Kiki","Oki","Anwar","Alda","Nia","Taufik","Nina","Edi","Maman","Dewi","Tina","Hilda","Rio","Dini","Ari","Reza","Fina","Bona","Sani","Hendra","Irma","Dodo",
+            "Adi Putra","Ani Dewi","Budi Santoso","Dina Sari","Eka Rini","Feri Yana","Gita Anin","Hadi Wira","Indra Arya","Joko Wati","Kiki Tania","Lina Putri","Maya Sari","Nina Rina","Oki Dina","Putu Sari","Rian Dito","Siti Rini","Tari Ani","Udin Aji","Vina Lest","Wati Rina","Yana Sari","Zara Nia","Aldi Budi","Beni Wira","Dodi Rani","Euis Rani","Fina Rini","Gita Rani","Hana Sari","Irma Lest","Jaka Dina","Kara Sari","Lani Rina","Mila Putri","Nuri Wati","Oni Dewi","Pina Sari","Rani Tania",
+            "Sari Yana","Tina Sari","Ulia Dewi","Vino Aris","Weni Lest","Yani Rani","Zani Dina","Asep Budi","Bani Wira","Dila Rani","Echa Wati","Fira Tini","Gani Sari","Hani Putri","Icha Rani","Jani Dina","Kori Lest","Lora Wati","Maya Rina","Nina Dewi","Olin Sari","Pita Rina","Rima Sari","Sami Wira","Tami Lest","Ulin Rani","Vidi Dina","Wina Sari","Yani Dina","Zefa Wati","Aris Wira","Bima Sari","Deni Rina","Elia Lest","Fira Tani","Gana Wati","Hana Dina","Inda Sari","Jeni Wati","Kiko Lest","Lilo Sari","Miki Rina","Nisa Dewi","Oma Rani","Pina Wati","Rana Dina","Sani Wira","Tika Rani","Uta Sari","Vini Lest","Wida Rani","Yona Sari","Zula Dewi","Ajeng Wati","Bayu Rina","Deni Sari","Echa Rani","Fika Wati","Gina Lest"
     };
 
-    private static final String[] CITIES = {
-            "Jakarta", "Surabaya", "Bandung", "Medan", "Semarang", "Makassar", "Palembang", "Tangerang", "Depok", "Batam",
-            "Bekasi", "Padang", "Bogor", "Malang", "Pekanbaru", "Bandar Lampung", "Denpasar", "Surakarta", "Banjarmasin", "Jambi",
-            "Yogyakarta", "Pontianak", "Manado", "Balikpapan", "Ambon", "Samarinda", "Palu", "Cirebon", "Purwokerto", "Tasikmalaya",
-            "Serang", "Banda Aceh", "Tegal", "Kupang", "Binjai", "Pematangsiantar", "Palangkaraya", "Probolinggo", "Pasuruan", "Salatiga",
-            "Batam", "Lubuklinggau", "Cimahi", "Mojokerto", "Magelang", "Batu", "Tarakan", "Singkawang", "Prabumulih", "Bangka",
-            "Padangsidimpuan", "Metro", "Tanjungpinang", "Bontang", "Kendari", "Parepare", "Lhokseumawe", "Ternate", "Bitung", "Palopo",
-            "Bukittinggi", "Pagar Alam", "Tomohon", "Ambarawa", "Tebing Tinggi", "Tidore", "Palopo", "Pangkal Pinang", "Sukabumi", "Banda Aceh",
-            "Dumai", "Madiun", "Bukittinggi", "Kendari", "Tual", "Sorong", "Merauke", "Cilacap", "Bengkulu", "Sawahlunto",
-            "Pare-pare", "Pematangsiantar", "Sijunjung", "Tarakan", "Waingapu", "Blitar", "Kepahiang", "Padangpanjang", "Padang Sidempuan", "Pangkalpinang",
-            "Parepare", "Pemalang", "Pematang Siantar", "Sungailiat", "Tabanan", "Tangerang Selatan", "Tanjungbalai", "Tanjungpinang", "Tapaktuan", "Tarakan",
-            "Tasikmalaya", "Tebing Tinggi", "Tegal", "Tidore Kepulauan", "Tomohon", "Tual", "Banyuwangi", "Barru", "Takalar", "Lamongan",
-            "Blitar", "Lhokseumawe", "Sukabumi", "Sungai Penuh", "Sungailiat", "Palopo", "Pangkajene", "Pasuruan", "Lamongan", "Langsa",
-            "Biak", "Muna", "Buton", "Kefamenanu", "Rote Ndao", "Larantuka", "Ende", "Bima", "Sumbawa Besar", "Dompu"
+    private static final String[] ADDRESSES = {
+            "Jl. Sudirman", "Jl. Thamrin", "Jl. Gatot Subroto", "Jl. Ahmad Yani", "Jl. Sisingamangaraja", "Jl. Diponegoro", "Jl. Panglima Polim", "Jl. Kebon Jeruk", "Jl. Casablanca", "Jl. Rasuna Said",
+            "Jl. H.R. Rasuna Said", "Jl. Senopati", "Jl. Dr. Sutomo", "Jl. Imam Bonjol", "Jl. Cikini", "Jl. Kramat Raya", "Jl. Jend. Sudirman", "Jl. Merdeka Barat", "Jl. Merdeka Timur", "Jl. Merdeka Utara",
+            "Jl. K.H. Wahid Hasyim", "Jl. Prof. Dr. Satrio", "Jl. Letjen S. Parman", "Jl. Mangga Besar", "Jl. Hayam Wuruk", "Jl. Gajah Mada", "Jl. Gunung Sahari", "Jl. Pangeran Jayakarta", "Jl. Gunung Sahari Raya",
+            "Jl. Sukarjo Wiryopranoto", "Jl. Mangga Dua", "Jl. Pintu Besar Selatan", "Jl. Pintu Besar Utara", "Jl. Kali Besar", "Jl. Bank", "Jl. Lada", "Jl. Kunir", "Jl. Pinangsia", "Jl. Hayam Wuruk",
+            "Jl. Medan Merdeka Selatan", "Jl. Abdul Muis", "Jl. Tanah Abang", "Jl. Kebon Sirih", "Jl. Sabang", "Jl. Teuku Umar", "Jl. Diponegoro", "Jl. Pegangsaan Timur", "Jl. Proklamasi", "Jl. Salemba Raya",
+            "Jl. Percetakan Negara", "Jl. Kramat", "Jl. Matraman", "Jl. Pramuka", "Jl. Pemuda", "Jl. Balai Pustaka", "Jl. Pramuka Raya", "Jl. Taman Mini", "Jl. Raya Bogor", "Jl. Condet", "Jl. Dewi Sartika",
+            "Jl. Kalibata", "Jl. Pasar Minggu", "Jl. Warung Buncit", "Jl. Mampang Prapatan", "Jl. Gatot Subroto", "Jl. Jenderal Sudirman", "Jl. MT Haryono", "Jl. D.I. Panjaitan", "Jl. Mayjen Sutoyo",
+            "Jl. Letjen Suprapto", "Jl. Pramuka", "Jl. Ahmad Yani", "Jl. Perintis Kemerdekaan", "Jl. Yos Sudarso", "Jl. R.E. Martadinata", "Jl. Gunung Sahari", "Jl. Lodan", "Jl. Mangga Dua", "Jl. Gunung Sahari",
+            "Jl. Kemayoran", "Jl. Rajawali", "Jl. Benyamin Sueb", "Jl. Garuda", "Jl. Bungur", "Jl. Tanah Tinggi", "Jl. Senen", "Jl. Kramat Raya", "Jl. Salemba Raya", "Jl. Matraman Raya", "Jl. Pramuka",
+            "Jl. Pemuda", "Jl. Bekasi Timur", "Jl. Bekasi Barat", "Jl. I Gusti Ngurah Rai", "Jl. Raya Kalimalang", "Jl. Inspeksi Kalimalang", "Jl. KH Noer Ali", "Jl. Kemang", "Jl. Wolter Monginsidi",
+            "Jl. Trunojoyo", "Jl. Pattimura", "Jl. Cipete Raya", "Jl. Ampera", "Jl. Antasari", "Jl. Fatmawati", "Jl. Radio Dalam", "Jl. Wijaya", "Jl. Benda", "Jl. Bangka", "Jl. Melawai",
+            "Jl. Barito", "Jl. Tirtayasa", "Jl. Pakubuwono", "Jl. Hang Lekir", "Jl. Hang Tuah", "Jl. Hang Jebat", "Jl. Wijaya Kusuma", "Jl. Senayan", "Jl. Raden Patah", "Jl. Prapanca",
+            "Jl. Gunawarman", "Jl. Suryo", "Jl. Surabaya", "Jl. Dipati Ukur", "Jl. Surapati", "Jl. Dago"
     };
 
     public static void main(String[] args) {
@@ -61,8 +54,8 @@ public class DatabaseFactory {
 
     private static String getRandomCity() {
         Random random = new Random();
-        int index = random.nextInt(CITIES.length);
-        return CITIES[index];
+        int index = random.nextInt(ADDRESSES.length);
+        return ADDRESSES[index];
     }
 
 }
