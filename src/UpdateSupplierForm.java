@@ -21,6 +21,7 @@ public class UpdateSupplierForm extends JFrame{
         this.namaField.setText(nama);
         this.alamatField.setText(alamat);
         this.teleponField.setText(telp);
+
         updateSupplier();
         cancelButton.addActionListener(e->{
             dispose();
@@ -45,12 +46,12 @@ public class UpdateSupplierForm extends JFrame{
             String id = this.id;
 
             if (nama.isEmpty() || telp.isEmpty() || alamat.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Semua data harus diisi.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Semua data harus diisi.", "Warning!", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
             if (!telp.matches("\\d+")) {
-                JOptionPane.showMessageDialog(this, "Nomor telepon harus berupa angka.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nomor telepon harus berupa angka.", "Warning!", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -59,6 +60,7 @@ public class UpdateSupplierForm extends JFrame{
             try {
                 DatabaseManager.Edit(new DatabaseManager(nama, alamat, telp), Global.id);
                 dispose();
+                JOptionPane.showMessageDialog(this, "Item berhasil diupdate.");
             } catch (SQLException evt) {
                 evt.printStackTrace();
             }

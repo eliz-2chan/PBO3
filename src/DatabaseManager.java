@@ -21,7 +21,6 @@ public class DatabaseManager extends Person{
     {
         super(nama, alamat);
         this.telp = telp;
-
     }
 
     //    Telepon Get and Setter
@@ -60,6 +59,21 @@ public class DatabaseManager extends Person{
         return data;
     }
 
+    public static void baca_data(DefaultTableModel tb, String sql) throws SQLException {
+        java.sql.Connection db = (Connection) DatabaseConnection.getConnection();
+        try (PreparedStatement q = db.prepareStatement(sql)) {
+            ResultSet rs = q.executeQuery();
+            while (rs.next()) {
+                tb.addRow(new Object[]{
+                        rs.getString("id"),
+                        rs.getString("nama"),
+                        rs.getString("alamat"),
+                        rs.getString("telp"),
+                });
+            }
+        }
+    }
+
     public static void Add(DatabaseManager supplier) throws SQLException {
         Connection db = DatabaseConnection.getConnection();
         String sql = "INSERT INTO r_supplier (nama, alamat, telp) VALUES (?, ?, ?)";
@@ -93,21 +107,21 @@ public class DatabaseManager extends Person{
         }
     }
 
-    public static boolean DelAll() throws SQLException {
-        Connection db = DatabaseConnection.getConnection();
-        String sql = "DELETE FROM r_supplier";
-        try (PreparedStatement q = db.prepareStatement(sql)) {
-            int efek = q.executeUpdate();
-            return efek > 0;
-        }
-    }
-
-    public static boolean DelRandom() throws SQLException {
-        Connection db = DatabaseConnection.getConnection();
-        String sql = "DELETE FROM r_supplier WHERE id IN (SELECT id FROM r_supplier ORDER BY RAND() LIMIT 1)";
-        try (PreparedStatement q = db.prepareStatement(sql)) {
-            int efek = q.executeUpdate();
-            return efek > 0;
-        }
-    }
+//    public static boolean DelAll() throws SQLException {
+//        Connection db = DatabaseConnection.getConnection();
+//        String sql = "DELETE FROM r_supplier";
+//        try (PreparedStatement q = db.prepareStatement(sql)) {
+//            int efek = q.executeUpdate();
+//            return efek > 0;
+//        }
+//    }
+//
+//    public static boolean DelRandom() throws SQLException {
+//        Connection db = DatabaseConnection.getConnection();
+//        String sql = "DELETE FROM r_supplier WHERE id IN (SELECT id FROM r_supplier ORDER BY RAND() LIMIT 1)";
+//        try (PreparedStatement q = db.prepareStatement(sql)) {
+//            int efek = q.executeUpdate();
+//            return efek > 0;
+//        }
+//    }
 }

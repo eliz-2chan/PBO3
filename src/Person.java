@@ -23,11 +23,15 @@ public class Person {
     }
 
     // Method toString untuk representasi String dari objek
-    @Override
+//    @Override
     public String toString() {
         return "Person{" +
                 "nama='" + nama + '\'' +
                 ", alamat='" + alamat + '\'' +
                 '}';
+    }
+
+    public static void main(String[] args) {
+        Person person1 = new Person("aziz","smg");
     }
 }

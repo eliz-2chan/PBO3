@@ -30,11 +30,11 @@ public class AddSupplierForm extends JFrame {
             String alamat = alamatField.getText();
 
             if (nama.isEmpty() || telp.isEmpty() || alamat.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Semua data harus diisi.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Semua data harus diisi.", "Warning!", JOptionPane.WARNING_MESSAGE);
                 return;
             }
             if (!telp.matches("\\d+")) {
-                JOptionPane.showMessageDialog(this, "Nomor telepon harus berupa angka.", "Peringatan", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Nomor telepon harus berupa angka.", "Warning!", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 

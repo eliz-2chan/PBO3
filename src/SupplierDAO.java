@@ -259,7 +259,7 @@ public class SupplierDAO {
 //        );
         try {
 //            System.out.println("Hello World!");
-//            SupplierDAO.tambahSupplier(supplier1);
+            SupplierDAO.tambahSupplier(supplier1);
             SupplierDAO.tampilkanSupplier();
 //            SupplierDAO.tambahSupplier(supplier2);
 //            System.out.println("Data Supplier yang tersimpan di database:");

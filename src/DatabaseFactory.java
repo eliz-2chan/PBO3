@@ -40,7 +40,7 @@ public class DatabaseFactory {
                 String telp = "08" + getRandomTenDigitNumber();
                 String alamat = getRandomCity();
                 DatabaseManager.Add(new DatabaseManager(nama, alamat, telp));
-//                System.out.println("Data berhasil ditambahkan: " + nama + ", " + telp + ", " + alamat);
+                System.out.println("Data berhasil ditambahkan: " + nama + ", " + telp + ", " + alamat);
             }
         } catch (SQLException e) {
             e.printStackTrace();
