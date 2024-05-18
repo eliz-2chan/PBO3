@@ -24,5 +24,13 @@ Instruction to install the project locally :
 <li>https://github.com/eliz-2chan/PBO3.git</li>
 <li>To Resolve the dependencies go to Files > Project Structure > Modules > Dependencies > Add the required JAR Files</li>
 <li>To Resolve the JDK requirement go to Files > Project Structure > Project > Choose JDK and go to Modules > Dependencies > Choose your installed Java SDK</li>
+<li>Step with Images : </li>
+
+![img_1.png](img_1.png)
+![img.png](img.png)
+![img_2.png](img_2.png)
+![img_3.png](img_3.png)
+
 <li>Run Main.java</li>
+<li>Here you go!</li>
 </ol>
