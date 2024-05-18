@@ -108,7 +108,7 @@
             <properties>
               <model>
                 <item value="10"/>
-                <item value="20"/>
+                <item value="24"/>
                 <item value="30"/>
                 <item value="40"/>
                 <item value="50"/>
@@ -142,7 +142,7 @@
                 <item value="nama"/>
                 <item value="telp"/>
                 <item value="alamat"/>
-                <item value="id"/>
+                <item value="Waktu Pembuatan"/>
               </model>
             </properties>
           </component>

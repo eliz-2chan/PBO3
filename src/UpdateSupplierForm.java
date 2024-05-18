@@ -60,7 +60,7 @@ public class UpdateSupplierForm extends JFrame{
             try {
                 DatabaseManager.Edit(new DatabaseManager(nama, alamat, telp), Global.id);
                 dispose();
-                JOptionPane.showMessageDialog(this, "Item berhasil diupdate.");
+                JOptionPane.showMessageDialog(this, "Data berhasil diupdate.", "Sukses",JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException evt) {
                 evt.printStackTrace();
             }

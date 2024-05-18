@@ -28,9 +28,6 @@ public class FormSupplier extends JFrame{
     private JMenuItem deleteMenuItem;
 
 // Filter and Pagination
-//    private JComboBox filter;
-//    private JButton backButton;
-//    private JButton nextButton;
     private JPagination Halaman;
     private JButton btntampil;
     private JComboBox cbtampil;
@@ -38,13 +35,6 @@ public class FormSupplier extends JFrame{
     private JButton btndesc;
     private JButton btnasc;
     private DefaultPaginationModel paginationModel;
-//    private String filterCriteria = "Terbaru";
-//    private int currentPage = 1;
-//    private int totalRows;
-//    private int totalPages;
-//    private TableRowSorter<DefaultTableModel> sorter;
-//    private List<DatabaseManager> allData;
-
     private DefaultTableModel tb = new DefaultTableModel();
 
     int baris;
@@ -62,8 +52,6 @@ public class FormSupplier extends JFrame{
         updateSupplier();
         addSupplier();
         resetButton.addActionListener(e -> {
-//            searchTextField.setText("");
-//            currentPage = 1;
             initTable();
         });
         addWindowListener(new WindowAdapter() {
@@ -95,7 +83,6 @@ public class FormSupplier extends JFrame{
     public void searchSupplier()
     {
         searchButton.addActionListener(e -> {
-//            currentPage = 1;
             initTable();
         });
     }
@@ -163,24 +150,6 @@ public class FormSupplier extends JFrame{
             }
         });
 
-//        filter.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                FilterActionPerformed(evt);
-//            }
-//        });
-//
-//        nextButton.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                nextActionPerformed(evt);
-//            }
-//        });
-//
-//        backButton.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                backActionPerformed(evt);
-//            }
-//        });
-
         Halaman.addPaginationListener(new com.stripbandunk.jwidget.listener.PaginationListener() {
               public void onPageChange(com.stripbandunk.jwidget.event.PaginationEvent evt) {
                   HalamanOnPageChange(evt);
@@ -207,86 +176,6 @@ public class FormSupplier extends JFrame{
         });
     }
 
-//    public void initTable(){
-//        try {
-//            String[] header = {"Id", "Nama", "Alamat", "Telp"};
-//            DefaultTableModel dtm = new DefaultTableModel(header, 0) {
-//                public boolean isCellEditable(int row, int column) {
-//                    return false; // All cells non-editable
-//                }
-//            };
-//            viewTable.setModel(dtm);
-//            viewTable.getColumnModel().getColumn(0).setMaxWidth(64);
-//            viewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//
-//            String tampil = (String)cbtampil.getSelectedItem();
-//            paginationModel = new DefaultPaginationModel();
-//            //Kita misalkan ada 500 record, disini bisa lakukan count di DB
-//            paginationModel.setTotalItem(Global.JmlRec(Global.sql));
-//            //Mengeset jumlah record untuk satu halaman
-//            int n = Integer.parseInt(tampil);
-//            paginationModel.setPageSize(n);
-//            Halaman.setModel(paginationModel);
-//
-//            Connection conn = DatabaseConnection.getConnection();
-//            String keyword = searchTextField.getText().trim();
-//            String searchQuery = "SELECT * FROM r_supplier";
-//            if (!keyword.isEmpty()) {
-//                keyword = "%" + keyword + "%";
-//                searchQuery += " WHERE nama LIKE ?";
-//            }
-//
-//            PreparedStatement statement = conn.prepareStatement(searchQuery);
-//            if (!keyword.isEmpty()) {
-//                statement.setString(1, keyword);
-//            }
-//            ResultSet rs = statement.executeQuery();
-//
-//            List<DatabaseManager> data = new ArrayList<>();
-//            while (rs.next()) {
-//                DatabaseManager record = new DatabaseManager();
-//                record.setId(rs.getString("id"));
-//                record.setNama(rs.getString("nama"));
-//                record.setAlamat(rs.getString("alamat"));
-//                record.setTelp(rs.getString("telp"));
-//                data.add(record);
-//            }
-//
-//            switch (filterCriteria) {
-//                case "Terbaru" -> {}
-//                case "Terlama" -> Collections.reverse(data);
-//                case "A-Z" -> Collections.sort(data, Comparator.comparing(DatabaseManager::getNama));
-//                case "A-Z Alamat" -> Collections.sort(data, Comparator.comparing(DatabaseManager::getAlamat));
-//                default -> {}
-//            }
-//
-//            allData = data;
-//            totalRows = data.size();
-//            int visibleRows = (viewTable.getHeight() - 20) / 20;
-//            int pageSize = Math.max(20, visibleRows);
-//
-//            totalPages = (int) Math.ceil((double) totalRows / pageSize);
-//
-//            int start = (currentPage - 1) * pageSize;
-//            int end = Math.min(start + pageSize, totalRows);
-//
-//            for (int i = start; i < end; i++) {
-//                DatabaseManager record = data.get(i);
-//                Object[] row = {
-//                        String.valueOf(record.getId()),
-//                        record.getNama(),
-//                        record.getAlamat(),
-//                        record.getTelp()
-//                };
-//                dtm.addRow(row);
-//            }
-//            paginationField.setText(String.valueOf(currentPage));
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
     public void initTable(){
         try {
             String[] header = {"Id", "Nama", "Alamat", "Telp"};
@@ -305,6 +194,9 @@ public class FormSupplier extends JFrame{
 
             String tampil = (String) cbtampil.getSelectedItem();
             String f = (String) cbkol.getSelectedItem();
+            if (f == "Waktu Pembuatan"){
+                f = "id";
+            }
             order = " ORDER BY " + f + ascdes ;
             Global.sql="Select * FROM r_supplier WHERE id <> '' ";
             emptyTable(dtm);
@@ -344,10 +236,6 @@ public class FormSupplier extends JFrame{
         }
     }
 
-//    private void FilterActionPerformed(java.awt.event.ActionEvent evt) {
-//        filterCriteria = (String) filter.getSelectedItem();
-//        initTable();
-//    }
 
     private void TableMouseClicked(java.awt.event.MouseEvent evt) {
         int row = viewTable.rowAtPoint(evt.getPoint());
@@ -356,20 +244,6 @@ public class FormSupplier extends JFrame{
             popupMenu.show(viewTable, evt.getX(), evt.getY());
         }
     }
-
-//    private void backActionPerformed(java.awt.event.ActionEvent evt) {
-//        if (currentPage > 1) {
-//            currentPage--;
-//            initTable();
-//        }
-//    }
-//
-//    private void nextActionPerformed(java.awt.event.ActionEvent evt) {
-//        if (currentPage < totalPages) {
-//            currentPage++;
-//            initTable();
-//        }
-//    }
 
     public void createPopupMenu() {
         popupMenu = new JPopupMenu();

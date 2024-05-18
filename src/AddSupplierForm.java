@@ -41,6 +41,7 @@ public class AddSupplierForm extends JFrame {
             try {
                 DatabaseManager.Add(new DatabaseManager(nama, alamat, telp));
                 dispose();
+                JOptionPane.showMessageDialog(this, "Data berhasil ditambahkan.", "Sukses",JOptionPane.INFORMATION_MESSAGE);
             } catch (SQLException evt) {
                 JOptionPane.showMessageDialog(this, "Terjadi kesalahan saat menambahkan data: " + evt.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
