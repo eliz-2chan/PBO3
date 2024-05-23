@@ -10,13 +10,13 @@ public class DatabaseManager extends Person{
     private String telp;
     private String id;
 
-    // Constructor
+    // No Argument Constructor
     public DatabaseManager() {
         super("", "");
         this.telp = "";
         this.id = "";
     }
-
+//    Normal Constructor
     public DatabaseManager(String nama, String alamat, String telp)
     {
         super(nama, alamat);
@@ -39,26 +39,7 @@ public class DatabaseManager extends Person{
         this.id = id;
     }
 
-
-    public static List<DatabaseManager> loadDataToTable() {
-        List<DatabaseManager> data = new ArrayList<>();
-        String sql = "SELECT id, nama, telp, alamat FROM r_supplier ORDER BY id DESC";
-        try (Connection conn = DatabaseConnection.getConnection(); PreparedStatement stmt = conn.prepareStatement(sql); ResultSet rs = stmt.executeQuery()) {
-            while (rs.next()) {
-                String id = rs.getString("id");
-                String nama = rs.getString("nama");
-                String alamat = rs.getString("alamat");
-                String telp = rs.getString("telp");
-                DatabaseManager record = new DatabaseManager(nama, alamat, telp);
-                record.setId(id);
-                data.add(record);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return data;
-    }
-
+//  Read Data to Table Method
     public static void baca_data(DefaultTableModel tb, String sql) throws SQLException {
         java.sql.Connection db = (Connection) DatabaseConnection.getConnection();
         try (PreparedStatement q = db.prepareStatement(sql)) {
@@ -74,6 +55,7 @@ public class DatabaseManager extends Person{
         }
     }
 
+//    Add Method
     public static void Add(DatabaseManager supplier) throws SQLException {
         Connection db = DatabaseConnection.getConnection();
         String sql = "INSERT INTO r_supplier (nama, alamat, telp) VALUES (?, ?, ?)";
@@ -85,6 +67,7 @@ public class DatabaseManager extends Person{
         }
     }
 
+//    Edit Method
     public static void Edit(DatabaseManager supplier, String id) throws SQLException {
         Connection db = DatabaseConnection.getConnection();
         String sqledit = "UPDATE r_supplier SET nama = ?, alamat = ?, telp = ? WHERE id = ?";
@@ -97,31 +80,14 @@ public class DatabaseManager extends Person{
         }
     }
 
+//      Delete Method
     public static boolean Del(String id) throws SQLException {
         Connection db = DatabaseConnection.getConnection();
         String sql = "DELETE FROM r_supplier WHERE id = ?";
         try (PreparedStatement q = db.prepareStatement(sql)) {
             q.setString(1, id);
-            int efek = q.executeUpdate();
-            return efek > 0;
+            int effect = q.executeUpdate();
+            return effect > 0;
         }
     }
-
-//    public static boolean DelAll() throws SQLException {
-//        Connection db = DatabaseConnection.getConnection();
-//        String sql = "DELETE FROM r_supplier";
-//        try (PreparedStatement q = db.prepareStatement(sql)) {
-//            int efek = q.executeUpdate();
-//            return efek > 0;
-//        }
-//    }
-//
-//    public static boolean DelRandom() throws SQLException {
-//        Connection db = DatabaseConnection.getConnection();
-//        String sql = "DELETE FROM r_supplier WHERE id IN (SELECT id FROM r_supplier ORDER BY RAND() LIMIT 1)";
-//        try (PreparedStatement q = db.prepareStatement(sql)) {
-//            int efek = q.executeUpdate();
-//            return efek > 0;
-//        }
-//    }
 }

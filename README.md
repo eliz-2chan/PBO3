@@ -1,4 +1,7 @@
-<h1>Github Repo for Data Supplier CRUD with Java</h1>
+<h1>Data Supplier CRUD with Java</h1>
+Some of the code may be poorly coded and poorly optimized
+<br>
+<br>
 Software Req :
 <li>IDE : IntelliJ Idea</li>
 <li>Java SDK 17 (Recommended)</li>
@@ -44,6 +47,12 @@ Instruction to install the project locally :
 <li>Open the IDE</li>
 <li>Get from VCS and insert the project repository link</li>
 <li>https://github.com/eliz-2chan/PBO3.git</li>
+<li>Or clone manually with git command and open the project with Intellij Idea</li>
+
+```
+$ git clone https://github.com/eliz-2chan/PBO3.git
+```
+
 <li>To Resolve the dependencies go to Files > Project Structure > Modules > Dependencies > Add the required JAR Files</li>
 <li>To Resolve the JDK requirement go to Files > Project Structure > Project > Choose JDK and go to Modules > Dependencies > Choose your installed Java SDK</li>
 <li>Step with Images : </li>

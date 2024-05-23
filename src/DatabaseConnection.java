@@ -6,14 +6,18 @@ public class DatabaseConnection {
     private static Connection connection;
     public static Connection getConnection() {
         try {
+//            Register Driver
             DriverManager.registerDriver(new com.mysql.cj.jdbc.Driver());
-            String url = "jdbc:mysql://localhost:3306/dataku"; //nama url database
-            String user = "root"; //nama user database
-            String pass = ""; //nama password database
+//            Database URL
+            String url = "jdbc:mysql://localhost:3306/dataku";
+//            Database Username
+            String user = "root";
+//            Database Password
+            String pass = "";
             connection = DriverManager.getConnection(url, user, pass);
-            System.out.println("Berhasil Koneksi");
+            System.out.println("Connection Success");
         } catch (Exception e) {
-            System.err.println("connection gagal " + e.getMessage());
+            System.err.println("Connection Failed " + e.getMessage());
         }
         return connection;
     }

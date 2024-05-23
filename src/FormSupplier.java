@@ -11,6 +11,9 @@ import javax.swing.table.TableRowSorter;
 import com.stripbandunk.jwidget.JPagination;
 import com.stripbandunk.jwidget.model.DefaultPaginationModel;
 
+
+// Main Form
+
 public class FormSupplier extends JFrame{
 //    Main Panel
     private JPanel mainPanel;
@@ -22,12 +25,12 @@ public class FormSupplier extends JFrame{
     private JButton deleteButton;
     private JButton updateButton;
 
-//    Popup Menu
+//  Popup Menu
     private JPopupMenu popupMenu;
     private JMenuItem editMenuItem;
     private JMenuItem deleteMenuItem;
 
-// Filter and Pagination
+//  Filter and Pagination
     private JPagination Halaman;
     private JButton btntampil;
     private JComboBox cbtampil;
@@ -35,25 +38,41 @@ public class FormSupplier extends JFrame{
     private JButton btndesc;
     private JButton btnasc;
     private DefaultPaginationModel paginationModel;
+
+
+//    Not used
+//    '''''
     private DefaultTableModel tb = new DefaultTableModel();
+//    ^^^^^
+
 
     int baris;
     int kol;
 
+//    Order Properties
     String order;
     String ascdes;
 
 
     public FormSupplier(){
         ascdes = " ASC";
+
+//        No need to set model Data from here, set from InitTable
+//        If set from here, the application wont work correctly
 //        viewTable.setModel(tb);
+
+//        Calling the Method to init the Event Listener
         searchSupplier();
         deleteSupplier();
         updateSupplier();
         addSupplier();
+
+//        Reset Button
         resetButton.addActionListener(e -> {
             initTable();
         });
+
+//        Window Listener
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowActivated(WindowEvent e) {
@@ -62,9 +81,12 @@ public class FormSupplier extends JFrame{
             }
         });
 
+//        Initialize Table and Form
         initTable();
         init();
     }
+
+//    Init Form
     public void init(){
         setContentPane(mainPanel);
         setTitle("Data Supplier");
@@ -73,13 +95,17 @@ public class FormSupplier extends JFrame{
         setLocationRelativeTo(null);
         initComponents();
     }
+
+//    Add Button Event Listener
     public void addSupplier(){
         addButton.addActionListener(e -> {
+//            Show AddSupplierForm inputFrame
             AddSupplierForm inputFrame = new AddSupplierForm();
             inputFrame.setVisible(true);
         });
     }
 
+//    Search event Listener
     public void searchSupplier()
     {
         searchButton.addActionListener(e -> {
@@ -87,6 +113,7 @@ public class FormSupplier extends JFrame{
         });
     }
 
+//    Delete Button Event Listener
     public void deleteSupplier()
     {
         deleteButton.addActionListener(e->{
@@ -116,6 +143,8 @@ public class FormSupplier extends JFrame{
             }
         });
     }
+
+//    Update Button Event Listener
     public void updateSupplier(){
         updateButton.addActionListener(e -> {
             int chosenRow = viewTable.getSelectedRow();
@@ -140,35 +169,40 @@ public class FormSupplier extends JFrame{
             updateFrame.setVisible(true);
         });
     }
-//
+
+// Init Components and Listener for Pagination and Popup Menu
     public void initComponents(){
         createPopupMenu();
 
+//      viewTable Mouse Listener
         viewTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 TableMouseClicked(evt);
             }
         });
 
+//        Pagination Event Listener
         Halaman.addPaginationListener(new com.stripbandunk.jwidget.listener.PaginationListener() {
               public void onPageChange(com.stripbandunk.jwidget.event.PaginationEvent evt) {
                   HalamanOnPageChange(evt);
               }
         });
 
+//      Total Row Action Listener
         btntampil.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btntampilActionPerformed(evt);
             }
         });
 
-
+//      Button Desc Action Listener
         btnasc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnascActionPerformed(evt);
             }
         });
 
+//        Button Desc Action Listener
         btndesc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btndescActionPerformed(evt);
@@ -176,14 +210,17 @@ public class FormSupplier extends JFrame{
         });
     }
 
+//    Init Table and Fill it with Data
     public void initTable(){
         try {
+//            Init Default Table Model
             String[] header = {"Id", "Nama", "Alamat", "Telp"};
             DefaultTableModel dtm = new DefaultTableModel(header, 0) {
                 public boolean isCellEditable(int row, int column) {
                     return false; // All cells non-editable
                 }
             };
+//            Setting the viewTable with model Table
             viewTable.setModel(dtm);
             viewTable.getColumnModel().getColumn(0).setMaxWidth(64);
             viewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -208,27 +245,36 @@ public class FormSupplier extends JFrame{
                 sql = sql + " OR alamat like '%" + cari + "%' ";
                 sql = sql + " OR telp like '%" + cari + "%' ";
             }
-            System.out.println(sql);
+
+//            Query Print for Checking
+//            System.out.println(sql);
+
             Global.sql = sql + order;
+
             paginationModel = new DefaultPaginationModel();
 
-            //Kita misalkan ada 500 record, disini bisa lakukan count di DB
+            //Count Total Row
             paginationModel.setTotalItem(Global.JmlRec(Global.sql));
 
-            //Mengeset jumlah record untuk satu halaman
+            //Setting Row for one page
             int n = Integer.parseInt(tampil);
             paginationModel.setPageSize(n);
             Halaman.setModel(paginationModel);
             sql = Global.sql + " limit " + n;
 
+//            Read Data
             DatabaseManager.baca_data(dtm,sql);
-            System.out.println(sql);
+
+//            Checking sql Query
+//            System.out.println(sql);
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
+//    Empty Table Method
     private void emptyTable(DefaultTableModel dtm){
         int rowCount = dtm.getRowCount();
         for (int i = rowCount - 1; i >= 0; i--) {
@@ -237,6 +283,7 @@ public class FormSupplier extends JFrame{
     }
 
 
+//    Table on right click mouse Event to show Popup Menu
     private void TableMouseClicked(java.awt.event.MouseEvent evt) {
         int row = viewTable.rowAtPoint(evt.getPoint());
         if (evt.getButton() == MouseEvent.BUTTON3 && row != -1) {
@@ -245,11 +292,13 @@ public class FormSupplier extends JFrame{
         }
     }
 
+    // Create Popup Menu
     public void createPopupMenu() {
         popupMenu = new JPopupMenu();
         editMenuItem = new JMenuItem("Update");
         deleteMenuItem = new JMenuItem("Delete");
 
+//      Edit menu Popup Action Listener
         editMenuItem.addActionListener(e -> {
             int selectedRow = viewTable.getSelectedRow();
             if (selectedRow != -1) {
@@ -276,6 +325,7 @@ public class FormSupplier extends JFrame{
             }
         });
 
+//      Delete Menu popup Action Listener
         deleteMenuItem.addActionListener(e -> {
             int selectedRow = viewTable.getSelectedRow();
             if (selectedRow != -1) {
@@ -308,21 +358,26 @@ public class FormSupplier extends JFrame{
         popupMenu.add(deleteMenuItem);
     }
 
+
+//    Pagination Event Listener
     private void HalamanOnPageChange(com.stripbandunk.jwidget.event.PaginationEvent evt) {
         DefaultTableModel dtm = (DefaultTableModel) viewTable.getModel();
-        // digunakan untuk mengeset limit pada query DB
+        // Set Limit Query DB
         int limit = (evt.getCurrentPage() - 1) * evt.getPageSize();
-        //contoh query
+
+        // Query Example
         String sql = Global.sql + " Limit " + limit + ", " + evt.getPageSize();
         System.out.println(sql);
+
         try {
             emptyTable(dtm);
             DatabaseManager.baca_data(dtm,sql);
         } catch (SQLException ex) {
             System.out.println(ex);
         }
-
     }
+
+//    Total Row Method on Click
     private void btntampilActionPerformed(java.awt.event.ActionEvent evt) {
         try {
             initTable();
@@ -331,6 +386,7 @@ public class FormSupplier extends JFrame{
         }
     }
 
+//    Ascending Method on Click
     private void btnascActionPerformed(java.awt.event.ActionEvent evt)
     {
         ascdes = " ASC";
@@ -340,6 +396,7 @@ public class FormSupplier extends JFrame{
             System.out.println(ex);
         }
     }
+//    Descending Method on Click
     private void btndescActionPerformed(java.awt.event.ActionEvent evt)
     {
         ascdes = " DESC";

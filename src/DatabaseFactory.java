@@ -1,3 +1,6 @@
+// Database Factory for creating dummy data
+// Run the Main function to create dummy data
+
 import java.sql.SQLException;
 import java.util.Random;
 
@@ -26,14 +29,16 @@ public class DatabaseFactory {
     };
 
     public static void main(String[] args) {
+//        Change the number of data you want to create here
         int numData = 200;
+
         try {
             for (int i = 0; i < numData; i++) {
                 String nama = getRandomName();
                 String telp = "08" + getRandomTenDigitNumber();
                 String alamat = getRandomCity();
                 DatabaseManager.Add(new DatabaseManager(nama, alamat, telp));
-                System.out.println("Data berhasil ditambahkan: " + nama + ", " + telp + ", " + alamat);
+                System.out.println("Data Successfully addec : " + nama + ", " + telp + ", " + alamat);
             }
         } catch (SQLException e) {
             e.printStackTrace();

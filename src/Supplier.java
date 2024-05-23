@@ -1,3 +1,6 @@
+// Class for Supplier
+// This class is only used for SupplierDAO, terminal based DAO
+
 public class Supplier extends Person{
     private String cp;
     private String telp;
@@ -117,109 +120,8 @@ public class Supplier extends Person{
         this.akhir =  akhir;
     }
 
-//    public Boolean addSuplier()
-//    {
-//        try{
-//            Connection conn = DatabaseConnection.getConnection();
-//
-//            String INSERT_QUERY = "INSERT INTO r_supplier (nama,alamat,cp,telp,kota,fax,email, jt, disc, awal, hutang, bayar,akhir) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
-//
-//            PreparedStatement statement = conn.prepareStatement(INSERT_QUERY);
-//
-//            statement.setString(1, this.getNama());
-//            statement.setString(2, this.getAlamat());
-//            statement.setString(3, this.getCp());
-//            statement.setString(4, this.getTelp());
-//            statement.setString(5, this.getKota());
-//            statement.setString(6, this.getFax());
-//            statement.setString(7, this.getEmail());
-//            statement.setInt(8, this.getJt());
-//            statement.setDouble(9, this.getDisc());
-//            statement.setDouble(10, this.getAwal());
-//            statement.setDouble(11, this.getHutang());
-//            statement.setDouble(12, this.getBayar());
-//            statement.setDouble(13, this.getAkhir());
-//
-//            statement.executeUpdate();
-//            return true;
-//        }catch (SQLException err){
-//            throw new RuntimeException();
-//        }
-//    }
-//
-//    public Boolean updSupplier(Integer id){
-//        try{
-//            Connection conn = DatabaseConnection.getConnection();
-//
-//            String UPDATE_QUERY = "UPDATE r_supplier SET nama=?, alamat=?, cp=?, telp=?, kota=?, fax=?, email=?,jt=?,disc=?,awal=?,hutang=?,bayar=?,akhir=? WHERE id = ?";
-//
-//            PreparedStatement statement = conn.prepareStatement(UPDATE_QUERY);
-//
-//            statement.setString(1, this.getNama());
-//            statement.setString(2, this.getAlamat());
-//            statement.setString(3, this.getCp());
-//            statement.setString(4, this.getTelp());
-//            statement.setString(5, this.getKota());
-//            statement.setString(6, this.getFax());
-//            statement.setString(7, this.getEmail());
-//            statement.setInt(8, this.getJt());
-//            statement.setDouble(9, this.getDisc());
-//            statement.setDouble(10, this.getAwal());
-//            statement.setDouble(11, this.getHutang());
-//            statement.setDouble(12, this.getBayar());
-//            statement.setDouble(13, this.getAkhir());
-//            statement.setInt(14, id);
-//            statement.execute();
-//            return true;
-//        }catch (SQLException err){
-//            throw new RuntimeException();
-//        }
-//    }
-//
-//    public static Boolean delSupplier(Integer id){
-//        try
-//        {
-//            Connection conn = DatabaseConnection.getConnection();
-//
-//            String DELETE_QUERY = "DELETE FROM r_supplier WHERE id=?";
-//
-//            PreparedStatement statement = conn.prepareStatement(DELETE_QUERY);
-//
-//            statement.setInt(1, Global.id);
-//            statement.executeUpdate();
-//            return true;
-//        } catch (SQLException err) {
-//            throw new RuntimeException(err);
-//        }
-//    }
-//
-//    public static void baca_data(DefaultTableModel tb, String sql) throws SQLException {
-//        Connection db = DatabaseConnection.getConnection();
-//        ;
-//        try (PreparedStatement q = db.prepareStatement(sql)) {
-//            ResultSet rs = q.executeQuery();
-//            while (rs.next()) {
-//                tb.addRow(new Object[]{
-//                        rs.getString("id"),
-//                        rs.getString("nama"),
-//                        rs.getString("alamat"),
-//                        rs.getString("cp"),
-//                        rs.getString("telp"),
-//                        rs.getString("kota"),
-//                        rs.getString("fax"),
-//                        rs.getString("email"),
-//                        rs.getString("jt"),
-//                        rs.getString("disc"),
-//                        rs.getString("awal"),
-//                        rs.getString("hutang"),
-//                        rs.getString("bayar"),
-//                        rs.getString("akhir")
-//                });
-//            }
-//        }
-//    }
     public static void main(String[] args) {
-//        Contoh penggunaan
+//        Usage Examples
         Supplier supplier = new Supplier(
                 "John Doe",
                 "Jl. Contoh No.123",

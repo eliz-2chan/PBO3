@@ -16,18 +16,27 @@ public class UpdateSupplierForm extends JFrame{
         this.id = id;
     }
 
+//    Update Form Constructor
     public UpdateSupplierForm(String nama, String alamat, String telp)
     {
+//        Set The Text Field
         this.namaField.setText(nama);
         this.alamatField.setText(alamat);
         this.teleponField.setText(telp);
 
+//        Calling Event Listener
         updateSupplier();
+
+//        Cancel Button Listener
         cancelButton.addActionListener(e->{
             dispose();
         });
+
+//        Init Update Form
         init();
     }
+
+//    Init Method
     public void init()
     {
         setContentPane(mainPanel);
@@ -37,6 +46,7 @@ public class UpdateSupplierForm extends JFrame{
         setLocationRelativeTo(null);
     }
 
+//    Update Event Listener
     public void updateSupplier()
     {
         updateButton.addActionListener(e-> {

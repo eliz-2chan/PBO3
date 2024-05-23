@@ -1,3 +1,5 @@
+// Super Class
+
 public class Person {
     private String nama;
     private String alamat;
@@ -22,8 +24,8 @@ public class Person {
         this.alamat = alamat;
     }
 
-    // Method toString untuk representasi String dari objek
-//    @Override
+    // Method toString to represent the Object with String
+    @Override
     public String toString() {
         return "Person{" +
                 "nama='" + nama + '\'' +
@@ -32,6 +34,7 @@ public class Person {
     }
 
     public static void main(String[] args) {
-        Person person1 = new Person("aziz","smg");
+//        Method Testing
+        Person person1 = new Person("Eliz","US");
     }
 }

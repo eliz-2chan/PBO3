@@ -1,3 +1,5 @@
+//Supplier DAO with complete Input and Terminal Based Application
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,11 +50,13 @@ public class SupplierDAO {
             statement.setDouble(11, supplier.getHutang());
             statement.setDouble(12, supplier.getBayar());
             statement.setDouble(13, supplier.getAkhir());
-//            statement.setString(14, supplier.getTgl());
             statement.executeUpdate();
+
+            System.out.println("Data Supplier " + supplier.getNama() + " berhasil tersimpan di database:");
         }
     }
     public static void tampilkanSupplier() throws SQLException {
+        System.out.println("Data Supplier yang tersimpan di database:");
         Connection conn = DatabaseConnection.getConnection();
         try (PreparedStatement statement = conn.prepareStatement(SELECT_ALL_QUERY)) {
             ResultSet resultSet = statement.executeQuery();
@@ -72,8 +76,6 @@ public class SupplierDAO {
                 Double bayar = resultSet.getDouble("bayar");
                 Double akhir = resultSet.getDouble("akhir");
                 String formattedTgl = formatTanggal(resultSet.getDate("tgl"));
-
-                System.out.println("Data Supplier yang tersimpan di database:");
                 System.out.println(
                     "id :" + id +
                     ", Nama: " + nama +
@@ -183,10 +185,6 @@ public class SupplierDAO {
             System.out.print("akhir: ");
             Double akhir = Double.parseDouble(input.readLine().trim());
 
-            System.out.print("tanggal (format yyyy-MM-dd) : ");
-            String tgl = input.readLine().trim();
-
-
             statement.setString(1, nama);
             statement.setString(2, alamat);
             statement.setString(3, cp);
@@ -200,8 +198,7 @@ public class SupplierDAO {
             statement.setDouble(11, hutang);
             statement.setDouble(12, bayar);
             statement.setDouble(13, akhir);
-            statement.setString(14, tgl);
-            statement.setInt(15, id);
+            statement.setInt(14, id);
             statement.execute();
             System.out.println("Data Supplier dengan id : " + id + " berhasil di update!");
             SupplierDAO.tampilkanSatuSupplier(id);
@@ -212,6 +209,7 @@ public class SupplierDAO {
     }
     public static void hapusSupplier() throws SQLException{
         Connection conn = DatabaseConnection.getConnection();
+        SupplierDAO.tampilkanSupplier();
         try (PreparedStatement statement = conn.prepareStatement(DELETE_QUERY))
         {
             SupplierDAO.tampilkanSupplier();
@@ -240,31 +238,19 @@ public class SupplierDAO {
                 3.0,
                 2.0,
                 4.0
-//                LocalDate.of(2024,5,7)
         );
-//        Supplier supplier2 = new Supplier(
-//                "Anna Doe",
-//                "Jl. Contoh No. 123",
-//                "12345",
-//                "08123456",
-//                "Semarang",
-//                "024123",
-//                "john@gmail.com",
-//                1,
-//                0.5,
-//                2.0,
-//                3.0,
-//                2.0,
-//                4.0
-//        );
         try {
-//            System.out.println("Hello World!");
+//            Add Supplier by using an Object as an argument
             SupplierDAO.tambahSupplier(supplier1);
+//            Show Supplier List
             SupplierDAO.tampilkanSupplier();
-//            SupplierDAO.tambahSupplier(supplier2);
 //            System.out.println("Data Supplier yang tersimpan di database:");
 //            SupplierDAO.tampilkanSupplier();
+
+//            Edit Supplier
 //            SupplierDAO.editSupplier();
+
+//            Delete Supplier
 //            SupplierDAO.hapusSupplier();
         } catch (SQLException e) {
             System.err.println("Error: " + e.getMessage());
